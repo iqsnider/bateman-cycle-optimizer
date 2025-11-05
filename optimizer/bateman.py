@@ -37,6 +37,23 @@ def simulate_decay(R, lam1, lam2, t_cycle, t_eval=None):
     return sol
 
 
+def snr(sol, lam1, lam2):
+    """
+    Calculates the Signal-To-Noise ratio between the parent
+    and daughter counts.
+    """
+    N1, N2 = sol.y
+    A1 = lam1*N1
+    A2 = lam2*N2
+
+    integral_A1 = np.trapezoid(A1, sol.t)
+    integral_A2 = np.trapezoid(A2, sol.t)
+
+    snr = integral_A2 / integral_A1 if integral_A1 > 0 else 0
+
+    return snr, integral_A1, integral_A2
+
+
 if __name__ == '__main__':
     R = 3
     lam1 = np.log(2)/0.894
@@ -49,33 +66,25 @@ if __name__ == '__main__':
     A1 = lam1*N1
     A2 = lam2*N2
 
+    snr, integral_A1, integral_A2 = snr(sol, lam1, lam2)
+    t = sol.t
+
     # seaborn styling
     plt.style.use('seaborn-v0_8-whitegrid')
     fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 8))
 
-    # activities
-    ax1.plot(sol.t, A1, 'royalblue', linewidth=2.5,
-             label=r'$A_p$ ($^{147}$Ba)')
-    ax1.plot(sol.t, A2, 'crimson', linewidth=2.5, label=r'$A_d$ ($^{147}$La)')
+    ax1.plot(t, A1, 'royalblue', linewidth=2.5, label=r'$A_p$ ($^{147}$Ba)')
+    ax1.plot(t, A2, 'crimson', linewidth=2.5, label=r'$A_d$ ($^{147}$La)')
+    ax1.fill_between(t, A1, alpha=0.3, color='royalblue',
+                     label=r'$\int A_p dt$ = {:.2f}'.format(integral_A1))
+    ax1.fill_between(t, A2, alpha=0.3, color='crimson',
+                     label=r'$\int A_d dt$ = {:.2f}'.format(integral_A2))
+    ax1.set_xlabel('Time (s)', fontsize=12, fontweight='bold')
     ax1.set_ylabel('Activity (decays/s)', fontsize=12, fontweight='bold')
-    ax1.set_title('Parent and Daughter Activities vs Time',
-                  fontsize=14, fontweight='bold')
-    ax1.legend(fontsize=11, frameon=True, fancybox=True, shadow=True)
+    ax1.set_title(f'Activities with Integrated Areas, SNR = {round(snr, 2)}',
+                  fontsize=13, fontweight='bold')
+    ax1.legend(fontsize=10, frameon=True, fancybox=True, shadow=True)
     ax1.grid(True, alpha=0.4)
-    ax1.tick_params(axis='both', which='major', labelsize=10)
-
-    # populations
-    ax2.plot(sol.t, N1, 'royalblue', linestyle='--',
-             linewidth=2.5, label=r'$N_p$ ($^{147}$Ba)')
-    ax2.plot(sol.t, N2, 'crimson', linestyle='--',
-             linewidth=2.5, label=r'$N_d$ ($^{147}$La)')
-    ax2.set_xlabel('Time (s)', fontsize=12, fontweight='bold')
-    ax2.set_ylabel('Population', fontsize=12, fontweight='bold')
-    ax2.set_title('Nuclear Populations vs Time',
-                  fontsize=14, fontweight='bold')
-    ax2.legend(fontsize=11, frameon=True, fancybox=True, shadow=True)
-    ax2.grid(True, alpha=0.4)
-    ax2.tick_params(axis='both', which='major', labelsize=10)
 
     plt.tight_layout()
     plt.show()
