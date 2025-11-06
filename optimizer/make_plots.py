@@ -1,0 +1,35 @@
+import matplotlib.pyplot as plt
+
+
+def tape_cycle_plot(t, A1, A2, integral_A1, integral_A2, snr_val, save):
+    # seaborn styling
+    plt.style.use('seaborn-v0_8-whitegrid')
+    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 8))
+
+    ax1.plot(t, A1, 'royalblue', linewidth=2.5, label=r'$A_p$ ($^{147}$Ba)')
+    ax1.plot(t, A2, 'crimson', linewidth=2.5, label=r'$A_d$ ($^{147}$La)')
+    ax1.plot(t, A1 - A2, 'orange', linewidth=2.5, label=r'$A_p - A_d$')
+    ax1.fill_between(t, A1, alpha=0.3, color='royalblue',
+                     label=r'$\int A_p dt$ = {:.2f}'.format(integral_A1))
+    ax1.fill_between(t, A2, alpha=0.3, color='crimson',
+                     label=r'$\int A_d dt$ = {:.2f}'.format(integral_A2))
+    ax1.set_xlabel('Time (s)', fontsize=12, fontweight='bold')
+    ax1.set_ylabel('Activity (decays/s)', fontsize=12, fontweight='bold')
+    ax1.set_title(f'Activities with Integrated Areas, SNR = {round(snr_val, 2)}',
+                  fontsize=13, fontweight='bold')
+    ax1.legend(fontsize=10, frameon=True, fancybox=True, shadow=True)
+    ax1.grid(True, alpha=0.4)
+
+    ax2.plot(t, A1/A2, 'darkgreen', linewidth=2.5)
+    ax2.set_xlabel('Time (s)', fontsize=12, fontweight='bold')
+    ax2.set_ylabel('SNR', fontsize=12, fontweight='bold')
+    # ax2.set_title(r'Signal-to-Noise Ratio $\left(\frac{\int A_p dt}{\int A_d dt}\right)$ Over the Tape Cycle',
+    #               fontsize=13, fontweight='bold')
+    ax2.set_title(r'Signal-to-Noise Ratio $\left(\frac{A_p}{A_d}\right)$ Over the Tape Cycle',
+                  fontsize=13, fontweight='bold')
+    ax2.grid(True, alpha=0.4)
+
+    plt.tight_layout()
+    if save is not None:
+        plt.savefig(save, dpi=300, bbox_inches="tight")
+    plt.show()
