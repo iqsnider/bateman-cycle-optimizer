@@ -23,7 +23,12 @@ $N_p (0) = N_d (0) = 0 $
 $""^(147)_()"Ba"$ $t_(1/2) = 0.894$ s #h(2em) $""^(147)_()"La"$ $t_(1/2) = 4.06$ s  \
 $""^(148)_()"Ba"$ $t_(1/2) = 0.619$ s #h(2em) $""^(148)_()"La"$ $t_(1/2) = 1.411$ s  \
 
-maximize $"SNR"(t_"cycle") = frac(integral_0^t_"cycle" A_p dif t ,integral_0^t_"cycle" A_d dif t ) $ might have to specify minimum contamination
+maximize $"SNR"(t_"cycle") = frac(integral_0^t_"cycle" A_p dif t ,integral_0^t_"cycle" A_d dif t )$ might have to specify minimum contamination
+
+Find maximum net $A_p$
+
+#image("figs/A147.png")
+#image("figs/A148.png")
 // because I love LTI models:
 //
 // $ mat(dot(N)_p; dot(N)_d) = mat(-lambda_p, 0; 0 ,-lambda_d)mat(N_p; N_d) + mat(1;0)R \
