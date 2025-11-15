@@ -62,6 +62,8 @@ def snr_w_time(sol, lam1, lam2):
     """
     all_N1, all_N2 = sol.y
     snr_list = []
+    integral_A1_list = []
+    integral_A2_list = []
     for idx, t in enumerate(sol.t):
         N1 = all_N1[:idx]
         N2 = all_N2[:idx]
@@ -71,7 +73,50 @@ def snr_w_time(sol, lam1, lam2):
         integral_A1 = np.trapezoid(A1, sol.t[:idx])
         integral_A2 = np.trapezoid(A2, sol.t[:idx])
 
-        snr = integral_A2 / integral_A1 if integral_A1 > 0 else 0
+        snr = integral_A1 / integral_A2 if integral_A1 > 0 else 0
         snr_list.append(snr)
+        integral_A1_list.append(integral_A1)
+        integral_A2_list.append(integral_A2)
 
-    return snr_list
+    return snr_list, np.array(integral_A1_list), np.array(integral_A2_list)
+
+
+def monte_carlo(sol, lam1, lam2, eff1=0.3, eff2=0.3, n_samples=1):
+    """
+    Monte carlo simulation for event activity
+    """
+    t = sol.t
+    N1, N2 = sol.y
+
+    dt = np.diff(t)
+    dt = np.append(dt, dt[-1])
+
+    A1 = lam1*N1
+    A2 = lam2*N2
+
+    results_parent = np.zeros(n_samples)
+    results_daughter = np.zeros(n_samples)
+
+    parent_ts_all = []
+    daughter_ts_all = []
+
+    for i in range(n_samples):
+        parent_decayed = np.random.poisson(A1*dt)
+        daughter_decayed = np.random.poisson(A2*dt)
+
+        # if not assuming perfect efficiency
+        parent_detected = np.random.binomial(parent_decayed, eff1)
+        daughter_detected = np.random.binomial(daughter_decayed, eff2)
+
+        results_parent[i] = parent_detected.sum()
+        results_daughter[i] = daughter_detected.sum()
+
+        parent_ts_all.append(parent_detected)
+        daughter_ts_all.append(daughter_detected)
+
+    return {
+        "parent_counts": results_parent,
+        "daughter_counts": results_daughter,
+        "parent_ts": parent_ts_all,
+        "daughter_ts": daughter_ts_all
+    }
