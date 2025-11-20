@@ -1,6 +1,6 @@
 uv run optim mc-search \
     --t-min 0.1 \
-    --t-max 30 \
+    --t-max 120 \
     --t-exp 57600 \
     --bins 15 \
     --rate 10.98 \
@@ -9,4 +9,3 @@ uv run optim mc-search \
     --eff1 1 --eff2 1 \
     --samples 10 \
     --a 147 \
-    --save mc_A147.png

@@ -45,7 +45,7 @@ def tape_cycle_plot(t, R, A, A1, A2, N1, N2, integral_A1, integral_A2, snr_vals,
     plt.show()
 
 
-def plot_vary_cycle_results(results, A, t_exp, save=None):
+def plot_vary_cycle_results(results, A, t_exp, parent=None, daughter=None, save=None):
     """
     Plots the mean detected parent & daughter counts vs cycle time,
     styled consistently with tape_cycle_plot, including mass number A,
@@ -66,6 +66,12 @@ def plot_vary_cycle_results(results, A, t_exp, save=None):
     daughter_stds = np.array([np.std(arr) for arr in daughter_counts])
 
     fig, ax = plt.subplots(figsize=(10, 6))
+    parent_label = "Ba"
+    daughter_label = "La"
+    if parent is not None:
+        parent_label = parent
+    if daughter is not None:
+        daughter_label = daughter
 
     # Parent errorbar curve
     ax.errorbar(
@@ -77,7 +83,7 @@ def plot_vary_cycle_results(results, A, t_exp, save=None):
         linewidth=2.5,
         markersize=7,
         capsize=4,
-        label=rf"$A_p$ ($^{{{A}}}\mathrm{{Ba}}$) detected counts"
+        label=rf"$A_p$ ($^{{{A}}}\mathrm{{{parent_label}}}$) detected counts"
     )
 
     # Daughter errorbar curve
@@ -90,12 +96,12 @@ def plot_vary_cycle_results(results, A, t_exp, save=None):
         linewidth=2.5,
         markersize=7,
         capsize=4,
-        label=rf"$A_d$ ($^{{{A}}}\mathrm{{La}}$) detected counts"
+        label=rf"$A_d$ ($^{{{A}}}\mathrm{{{daughter_label}}}$) detected counts"
     )
 
     # Labels styled like tape_cycle_plot
     ax.set_title(
-        rf"Detected Parent & Daughter Counts vs. Cycle Time  (A = {
+        rf"Detected Counts vs. Cycle Time  (A = {
             A}, Exp Time: {round(t_exp/60/60, 0)} h)",
         fontsize=15,
         fontweight="bold",

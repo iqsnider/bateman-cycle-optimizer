@@ -19,7 +19,6 @@ uv run optim mc-exp \
     --eff1 1 --eff2 1 \
     --samples 10 \
     --a 147 \
-    --save figs/A147.png
 echo
 echo "Running A148 with t_cycle = $T_CYCLE_148"
 uv run optim mc-exp \
@@ -31,5 +30,3 @@ uv run optim mc-exp \
     --eff1 1 --eff2 1 \
     --samples 10 \
     --a 148 \
-    --save figs/A148.png
-

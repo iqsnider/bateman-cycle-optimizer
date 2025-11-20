@@ -9,5 +9,4 @@ uv run optim mc-search \
     --eff1 1 --eff2 1 \
     --samples 10 \
     --a 148 \
-    --save figs/A148.png
-
+    --save mc_A148.png
