@@ -166,5 +166,31 @@ def simulate_experiment(sol, lam1, lam2, t_cycle, t_exp, eff1=1.0, eff2=1.0, n_s
     }
 
 
-def vary_cycle_time(sol, lam1, lam2, t_cycle_range, t_exp, eff1=1.0, eff2=1.0, n_samples=100):
-    pass
+def vary_cycle_time(R, lam1, lam2, t_min, t_max, t_exp, eff1=1.0, eff2=1.0, n_samples=100, n_cycles_to_test=10):
+    """
+    Does a grid search of cycle times to find the optimal cycle time while keeping good
+    statistics.
+    """
+    cycle_times = np.linspace(t_min, t_max, n_cycles_to_test)
+
+    parent_results = []
+    daughter_results = []
+    for t_cycle in cycle_times:
+        sol = simulate_decay(R, lam1, lam2, t_cycle)
+        sim = simulate_experiment(
+            sol=sol,
+            lam1=lam1,
+            lam2=lam2,
+            t_cycle=t_cycle,
+            t_exp=t_exp,
+            eff1=eff1,
+            eff2=eff2,
+            n_samples=n_samples)
+        parent_results.append(sim["parent_counts"])
+        daughter_results.append(sim["daughter_counts"])
+
+    return {
+        "cycle_times": cycle_times,
+        "parent_counts": parent_results,
+        "daughter_counts": daughter_results,
+    }

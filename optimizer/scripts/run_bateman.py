@@ -1,4 +1,4 @@
-from optimizer.bateman import simulate_decay, snr, snr_w_time, monte_carlo, simulate_experiment
+from optimizer.bateman import simulate_decay, snr, snr_w_time, monte_carlo, simulate_experiment, vary_cycle_time
 from optimizer.make_plots import tape_cycle_plot
 
 import numpy as np
@@ -63,7 +63,7 @@ def mc_exp(t_cycle: float = 3,
            td: float = 4.06,
            eff1: float = 1.0,
            eff2: float = 1.0,
-           samples: int = 500,
+           samples: int = 10,
            A: int = 147,
            save: str = None):
 
@@ -79,6 +79,27 @@ def mc_exp(t_cycle: float = 3,
     print(f"Mean daughter counts: {mc_res['daughter_counts'].mean():.2f}")
     print(f"Std parent counts:    {mc_res['parent_counts'].std():.2f}")
     print(f"Std daughter counts:  {mc_res['daughter_counts'].std():.2f}")
+
+
+@app.command()
+def mc_search(t_min: float = 0.5,
+              t_max: float = 20,
+              t_exp: float = 28800,
+              bins: int = 10,
+              rate: float = 3,
+              tp: float = 0.894,
+              td: float = 4.06,
+              eff1: float = 1.0,
+              eff2: float = 1.0,
+              samples: int = 10,
+              A: int = 147,
+              save: str = None):
+
+    lam1 = np.log(2)/tp
+    lam2 = np.log(2)/td
+
+    mc_res = vary_cycle_time(rate, lam1, lam2, t_min, t_max,
+                             t_exp, eff1, eff2, samples, n_cycles_to_test=bins)
 
 
 if __name__ == '__main__':
