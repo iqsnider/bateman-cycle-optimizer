@@ -1,5 +1,5 @@
 from optimizer.bateman import simulate_decay, snr, snr_w_time, monte_carlo, simulate_experiment, vary_cycle_time
-from optimizer.make_plots import tape_cycle_plot
+from optimizer.make_plots import tape_cycle_plot, plot_vary_cycle_results
 
 import numpy as np
 import typer
@@ -100,6 +100,10 @@ def mc_search(t_min: float = 0.5,
 
     mc_res = vary_cycle_time(rate, lam1, lam2, t_min, t_max,
                              t_exp, eff1, eff2, samples, n_cycles_to_test=bins)
+    for t, pc, dc in zip(mc_res["cycle_times"], mc_res["parent_counts"], mc_res["daughter_counts"]):
+        print(f"t_cycle={t:.2f}  parent_mean={
+              np.mean(pc):.1f}  daughter_mean={np.mean(dc):.1f}")
+    plot_vary_cycle_results(mc_res)
 
 
 if __name__ == '__main__':

@@ -1,4 +1,6 @@
 import matplotlib.pyplot as plt
+import seaborn as sns
+import numpy as np
 
 
 def tape_cycle_plot(t, R, A, A1, A2, N1, N2, integral_A1, integral_A2, snr_vals, integrals_A1, integrals_A2, save):
@@ -40,4 +42,62 @@ def tape_cycle_plot(t, R, A, A1, A2, N1, N2, integral_A1, integral_A2, snr_vals,
     plt.tight_layout()
     if save is not None:
         plt.savefig(save, dpi=300, bbox_inches="tight")
+    plt.show()
+
+
+def plot_vary_cycle_results(results):
+    """
+    Plots the mean detected parent & daughter counts vs. cycle time
+    using a clean whitegrid Seaborn style.
+    """
+
+    sns.set_theme(style="whitegrid")
+
+    cycle_times = results["cycle_times"]
+    parent_counts = results["parent_counts"]    # list of arrays
+    daughter_counts = results["daughter_counts"]
+
+    # Compute means & standard deviations
+    parent_means = np.array([np.mean(arr) for arr in parent_counts])
+    parent_stds = np.array([np.std(arr) for arr in parent_counts])
+
+    daughter_means = np.array([np.mean(arr) for arr in daughter_counts])
+    daughter_stds = np.array([np.std(arr) for arr in daughter_counts])
+
+    # Create figure
+    plt.figure(figsize=(10, 6))
+
+    # Plot parent
+    plt.errorbar(
+        cycle_times,
+        parent_means,
+        yerr=parent_stds,
+        fmt="-o",
+        capsize=4,
+        linewidth=2,
+        markersize=6,
+        label="Parent counts"
+    )
+
+    # Plot daughter
+    plt.errorbar(
+        cycle_times,
+        daughter_means,
+        yerr=daughter_stds,
+        fmt="-s",
+        capsize=4,
+        linewidth=2,
+        markersize=6,
+        label="Daughter counts"
+    )
+
+    # Labels & aesthetics
+    plt.title("Detected Counts vs. Cycle Time", fontsize=18, pad=10)
+    plt.xlabel("Cycle time (s)", fontsize=14)
+    plt.ylabel("Mean detected counts", fontsize=14)
+    plt.xticks(fontsize=12)
+    plt.yticks(fontsize=12)
+
+    plt.legend(fontsize=12)
+    plt.tight_layout()
     plt.show()
