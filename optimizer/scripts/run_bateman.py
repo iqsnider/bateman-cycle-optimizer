@@ -103,7 +103,7 @@ def mc_search(t_min: float = 0.5,
     for t, pc, dc in zip(mc_res["cycle_times"], mc_res["parent_counts"], mc_res["daughter_counts"]):
         print(f"t_cycle={t:.2f}  parent_mean={
               np.mean(pc):.1f}  daughter_mean={np.mean(dc):.1f}")
-    plot_vary_cycle_results(mc_res)
+    plot_vary_cycle_results(mc_res, A, t_exp)
 
 
 if __name__ == '__main__':

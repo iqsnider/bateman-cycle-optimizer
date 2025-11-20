@@ -2,7 +2,7 @@ uv run optim mc-search \
     --t-min 0.1 \
     --t-max 30 \
     --t-exp 111600 \
-    --bin 15 \
+    --bins 15 \
     --rate 0.99 \
     --tp 0.619 \
     --td 1.411 \

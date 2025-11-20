@@ -45,59 +45,77 @@ def tape_cycle_plot(t, R, A, A1, A2, N1, N2, integral_A1, integral_A2, snr_vals,
     plt.show()
 
 
-def plot_vary_cycle_results(results):
+def plot_vary_cycle_results(results, A, t_exp, save=None):
     """
-    Plots the mean detected parent & daughter counts vs. cycle time
-    using a clean whitegrid Seaborn style.
+    Plots the mean detected parent & daughter counts vs cycle time,
+    styled consistently with tape_cycle_plot, including mass number A,
+    and using error bars (no shaded regions).
     """
 
-    sns.set_theme(style="whitegrid")
+    plt.style.use('seaborn-v0_8-whitegrid')
 
     cycle_times = results["cycle_times"]
-    parent_counts = results["parent_counts"]    # list of arrays
+    parent_counts = results["parent_counts"]
     daughter_counts = results["daughter_counts"]
 
-    # Compute means & standard deviations
+    # Means & standard deviations
     parent_means = np.array([np.mean(arr) for arr in parent_counts])
     parent_stds = np.array([np.std(arr) for arr in parent_counts])
 
     daughter_means = np.array([np.mean(arr) for arr in daughter_counts])
     daughter_stds = np.array([np.std(arr) for arr in daughter_counts])
 
-    # Create figure
-    plt.figure(figsize=(10, 6))
+    fig, ax = plt.subplots(figsize=(10, 6))
 
-    # Plot parent
-    plt.errorbar(
+    # Parent errorbar curve
+    ax.errorbar(
         cycle_times,
         parent_means,
         yerr=parent_stds,
         fmt="-o",
+        color="royalblue",
+        linewidth=2.5,
+        markersize=7,
         capsize=4,
-        linewidth=2,
-        markersize=6,
-        label="Parent counts"
+        label=rf"$A_p$ ($^{{{A}}}\mathrm{{Ba}}$) detected counts"
     )
 
-    # Plot daughter
-    plt.errorbar(
+    # Daughter errorbar curve
+    ax.errorbar(
         cycle_times,
         daughter_means,
         yerr=daughter_stds,
         fmt="-s",
+        color="crimson",
+        linewidth=2.5,
+        markersize=7,
         capsize=4,
-        linewidth=2,
-        markersize=6,
-        label="Daughter counts"
+        label=rf"$A_d$ ($^{{{A}}}\mathrm{{La}}$) detected counts"
     )
 
-    # Labels & aesthetics
-    plt.title("Detected Counts vs. Cycle Time", fontsize=18, pad=10)
-    plt.xlabel("Cycle time (s)", fontsize=14)
-    plt.ylabel("Mean detected counts", fontsize=14)
-    plt.xticks(fontsize=12)
-    plt.yticks(fontsize=12)
+    # Labels styled like tape_cycle_plot
+    ax.set_title(
+        rf"Detected Parent & Daughter Counts vs. Cycle Time  (A = {
+            A}, Exp Time: {round(t_exp/60/60, 0)} h)",
+        fontsize=15,
+        fontweight="bold",
+        pad=10
+    )
+    ax.set_xlabel("Cycle Time [s]", fontsize=13, fontweight="bold")
+    ax.set_ylabel("Detected Counts", fontsize=13, fontweight="bold")
 
-    plt.legend(fontsize=12)
+    ax.grid(True, alpha=0.4)
+
+    ax.legend(
+        fontsize=11,
+        frameon=True,
+        fancybox=True,
+        shadow=True
+    )
+
     plt.tight_layout()
+
+    if save is not None:
+        plt.savefig(save, dpi=300, bbox_inches="tight")
+
     plt.show()
