@@ -81,7 +81,7 @@ def snr_w_time(sol, lam1, lam2):
     return snr_list, np.array(integral_A1_list), np.array(integral_A2_list)
 
 
-def monte_carlo(sol, lam1, lam2, eff1=0.3, eff2=0.3, n_samples=1):
+def monte_carlo(sol, lam1, lam2, eff1=1.0, eff2=1.0, n_samples=100):
     """
     Monte carlo simulation for event activity
     """
@@ -97,26 +97,74 @@ def monte_carlo(sol, lam1, lam2, eff1=0.3, eff2=0.3, n_samples=1):
     results_parent = np.zeros(n_samples)
     results_daughter = np.zeros(n_samples)
 
-    parent_ts_all = []
-    daughter_ts_all = []
-
     for i in range(n_samples):
         parent_decayed = np.random.poisson(A1*dt)
         daughter_decayed = np.random.poisson(A2*dt)
 
         # if not assuming perfect efficiency
-        parent_detected = np.random.binomial(parent_decayed, eff1)
-        daughter_detected = np.random.binomial(daughter_decayed, eff2)
+        if (eff1 != 1):
+            parent_detected = np.random.binomial(parent_decayed, eff1)
+        else:
+            parent_detected = parent_decayed
+        if (eff2 != 1):
+            daughter_detected = np.random.binomial(daughter_decayed, eff2)
+        else:
+            daughter_detected = daughter_decayed
 
         results_parent[i] = parent_detected.sum()
         results_daughter[i] = daughter_detected.sum()
 
-        parent_ts_all.append(parent_detected)
-        daughter_ts_all.append(daughter_detected)
+    return {
+        "parent_counts": results_parent,
+        "daughter_counts": results_daughter
+    }
+
+
+def simulate_experiment(sol, lam1, lam2, t_cycle, t_exp, eff1=1.0, eff2=1.0, n_samples=100) -> {}:
+    n_cycles = int(t_exp // t_cycle)
+
+    results_parent = np.zeros(n_samples)
+    results_daughter = np.zeros(n_samples)
+
+    t = sol.t
+    N1, N2 = sol.y
+
+    dt = np.diff(t)
+    dt = np.append(dt, dt[-1])
+
+    A1 = lam1*N1
+    A2 = lam2*N2
+
+    for i in range(n_samples):
+
+        total_parent_detected = []
+        total_daughter_detected = []
+
+        for _ in range(n_cycles):
+            parent_decayed = np.random.poisson(A1*dt)
+            daughter_decayed = np.random.poisson(A2*dt)
+
+            # if not assuming perfect efficiency
+            if (eff1 != 1):
+                parent_detected = np.random.binomial(parent_decayed, eff1)
+            else:
+                parent_detected = parent_decayed
+            if (eff2 != 1):
+                daughter_detected = np.random.binomial(daughter_decayed, eff2)
+            else:
+                daughter_detected = daughter_decayed
+
+            total_parent_detected.append(parent_detected.sum())
+            total_daughter_detected.append(daughter_detected.sum())
+
+        results_parent[i] = np.sum(total_parent_detected)
+        results_daughter[i] = np.sum(total_daughter_detected)
 
     return {
         "parent_counts": results_parent,
-        "daughter_counts": results_daughter,
-        "parent_ts": parent_ts_all,
-        "daughter_ts": daughter_ts_all
+        "daughter_counts": results_daughter
     }
+
+
+def vary_cycle_time(sol, lam1, lam2, t_cycle_range, t_exp, eff1=1.0, eff2=1.0, n_samples=100):
+    pass

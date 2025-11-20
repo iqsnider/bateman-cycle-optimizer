@@ -1,4 +1,4 @@
-from optimizer.bateman import simulate_decay, snr, snr_w_time, monte_carlo
+from optimizer.bateman import simulate_decay, snr, snr_w_time, monte_carlo, simulate_experiment
 from optimizer.make_plots import tape_cycle_plot
 
 import numpy as np
@@ -48,7 +48,33 @@ def mc(time: float = 3,
     sol = simulate_decay(rate, lam1, lam2, time)
 
     mc_res = monte_carlo(sol, lam1, lam2, eff1, eff2, samples)
-    print("\n=== Monte Carlo Results ===")
+    print(f"\nMonte Carlo Results (samples: {samples})\n")
+    print(f"Mean parent counts:   {mc_res['parent_counts'].mean():.2f}")
+    print(f"Mean daughter counts: {mc_res['daughter_counts'].mean():.2f}")
+    print(f"Std parent counts:    {mc_res['parent_counts'].std():.2f}")
+    print(f"Std daughter counts:  {mc_res['daughter_counts'].std():.2f}")
+
+
+@app.command()
+def mc_exp(t_cycle: float = 3,
+           t_exp: float = 28800,
+           rate: float = 3,
+           tp: float = 0.894,
+           td: float = 4.06,
+           eff1: float = 1.0,
+           eff2: float = 1.0,
+           samples: int = 500,
+           A: int = 147,
+           save: str = None):
+
+    lam1 = np.log(2)/tp
+    lam2 = np.log(2)/td
+    sol = simulate_decay(rate, lam1, lam2, t_cycle)
+
+    mc_res = simulate_experiment(
+        sol, lam1, lam2, t_cycle, t_exp, eff1, eff2, samples)
+    print(f"\nA = {A} Monte Carlo Results (Cycle time: {
+          t_cycle} s, experiment time: {round(t_exp/60/60, 0)} hrs, samples: {samples})\n")
     print(f"Mean parent counts:   {mc_res['parent_counts'].mean():.2f}")
     print(f"Mean daughter counts: {mc_res['daughter_counts'].mean():.2f}")
     print(f"Std parent counts:    {mc_res['parent_counts'].std():.2f}")
