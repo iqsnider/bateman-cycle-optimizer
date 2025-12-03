@@ -61,3 +61,15 @@ $t_"cycle" = 60$ s
 Found daughter $beta-gamma$ coincidence matrix and subtracted from the parent matrix
 
 Will make monte carlo simulation
+
+
+What is her plan with 148La, is she aware of the low statistics?
+How is she defining good statistics?
+Conclusion for presentation, will be next step.
+- simulations
+- raineer
+- geant4
+
+What don't you just cross a neutron beam with a La ion beam? Is it too expensive to maintain the neutron beam?
+
+$ ""^(147)_()"Ba" arrow ""^(147)_()"La" + beta^(-) + overline(nu_"e") $ 

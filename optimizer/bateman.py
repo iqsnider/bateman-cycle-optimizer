@@ -98,18 +98,8 @@ def monte_carlo(sol, lam1, lam2, eff1=1.0, eff2=1.0, n_samples=100):
     results_daughter = np.zeros(n_samples)
 
     for i in range(n_samples):
-        parent_decayed = np.random.poisson(A1*dt)
-        daughter_decayed = np.random.poisson(A2*dt)
-
-        # if not assuming perfect efficiency
-        if (eff1 != 1):
-            parent_detected = np.random.binomial(parent_decayed, eff1)
-        else:
-            parent_detected = parent_decayed
-        if (eff2 != 1):
-            daughter_detected = np.random.binomial(daughter_decayed, eff2)
-        else:
-            daughter_detected = daughter_decayed
+        parent_detected = np.random.poisson(eff1*A1*dt)
+        daughter_detected = np.random.poisson(eff2*A2*dt)
 
         results_parent[i] = parent_detected.sum()
         results_daughter[i] = daughter_detected.sum()
@@ -141,18 +131,8 @@ def simulate_experiment(sol, lam1, lam2, t_cycle, t_exp, eff1=1.0, eff2=1.0, n_s
         total_daughter_detected = []
 
         for _ in range(n_cycles):
-            parent_decayed = np.random.poisson(A1*dt)
-            daughter_decayed = np.random.poisson(A2*dt)
-
-            # if not assuming perfect efficiency
-            if (eff1 != 1):
-                parent_detected = np.random.binomial(parent_decayed, eff1)
-            else:
-                parent_detected = parent_decayed
-            if (eff2 != 1):
-                daughter_detected = np.random.binomial(daughter_decayed, eff2)
-            else:
-                daughter_detected = daughter_decayed
+            parent_detected = np.random.poisson(eff1*A1*dt)
+            daughter_detected = np.random.poisson(eff2*A2*dt)
 
             total_parent_detected.append(parent_detected.sum())
             total_daughter_detected.append(daughter_detected.sum())

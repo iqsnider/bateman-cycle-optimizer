@@ -83,7 +83,7 @@ def plot_vary_cycle_results(results, A, t_exp, parent=None, daughter=None, save=
         linewidth=2.5,
         markersize=7,
         capsize=4,
-        label=rf"$A_p$ ($^{{{A}}}\mathrm{{{parent_label}}}$) detected counts"
+        label=rf"$A_p$ ($^{{{A}}}\mathrm{{{parent_label}}}$) $\beta$-decays"
     )
 
     # Daughter errorbar curve
@@ -96,19 +96,19 @@ def plot_vary_cycle_results(results, A, t_exp, parent=None, daughter=None, save=
         linewidth=2.5,
         markersize=7,
         capsize=4,
-        label=rf"$A_d$ ($^{{{A}}}\mathrm{{{daughter_label}}}$) detected counts"
+        label=rf"$A_d$ ($^{{{A}}}\mathrm{{{daughter_label}}}$) $\beta$-decays"
     )
 
     # Labels styled like tape_cycle_plot
     ax.set_title(
-        rf"Detected Counts vs. Cycle Time  (A = {
+        rf"Detected $\beta$-decays vs. Cycle Time  (A = {
             A}, Exp Time: {round(t_exp/60/60, 0)} h)",
         fontsize=15,
         fontweight="bold",
         pad=10
     )
     ax.set_xlabel("Cycle Time [s]", fontsize=13, fontweight="bold")
-    ax.set_ylabel("Detected Counts", fontsize=13, fontweight="bold")
+    ax.set_ylabel(r"$\beta$-decays", fontsize=13, fontweight="bold")
 
     ax.grid(True, alpha=0.4)
 
