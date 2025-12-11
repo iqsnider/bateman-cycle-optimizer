@@ -148,8 +148,7 @@ def simulate_experiment(sol, lam1, lam2, t_cycle, t_exp, eff1=1.0, eff2=1.0, n_s
 
 def vary_cycle_time(R, lam1, lam2, t_min, t_max, t_exp, eff1=1.0, eff2=1.0, n_samples=100, n_cycles_to_test=10):
     """
-    Does a grid search of cycle times to find the optimal cycle time while keeping good
-    statistics.
+    Runs the monte carlo simulation with varying cycle times.
     """
     cycle_times = np.linspace(t_min, t_max, n_cycles_to_test)
 

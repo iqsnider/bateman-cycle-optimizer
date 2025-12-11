@@ -42,7 +42,7 @@ def tape_cycle_plot(t, R, A, A1, A2, N1, N2, integral_A1, integral_A2, snr_vals,
     plt.tight_layout()
     if save is not None:
         plt.savefig(save, dpi=300, bbox_inches="tight")
-    plt.show()
+        plt.show()
 
 
 def plot_vary_cycle_results(results, A, t_exp, parent=None, daughter=None, save=None):
@@ -58,7 +58,7 @@ def plot_vary_cycle_results(results, A, t_exp, parent=None, daughter=None, save=
     parent_counts = results["parent_counts"]
     daughter_counts = results["daughter_counts"]
 
-    # Means & standard deviations
+    # mean & standard deviations
     parent_means = np.array([np.mean(arr) for arr in parent_counts])
     parent_stds = np.array([np.std(arr) for arr in parent_counts])
 
@@ -73,7 +73,7 @@ def plot_vary_cycle_results(results, A, t_exp, parent=None, daughter=None, save=
     if daughter is not None:
         daughter_label = daughter
 
-    # Parent errorbar curve
+        # parent errorbar curve
     ax.errorbar(
         cycle_times,
         parent_means,
@@ -86,7 +86,7 @@ def plot_vary_cycle_results(results, A, t_exp, parent=None, daughter=None, save=
         label=rf"$A_p$ ($^{{{A}}}\mathrm{{{parent_label}}}$) $\beta$-decays"
     )
 
-    # Daughter errorbar curve
+    # daughter errorbar curve
     ax.errorbar(
         cycle_times,
         daughter_means,
@@ -96,10 +96,10 @@ def plot_vary_cycle_results(results, A, t_exp, parent=None, daughter=None, save=
         linewidth=2.5,
         markersize=7,
         capsize=4,
-        label=rf"$A_d$ ($^{{{A}}}\mathrm{{{daughter_label}}}$) $\beta$-decays"
+        label=rf"$A_d$ ($^{{{A}}}\mathrm{{{
+            daughter_label}}}$) $\beta$-decays"
     )
 
-    # Labels styled like tape_cycle_plot
     ax.set_title(
         rf"Detected $\beta$-decays vs. Cycle Time  (A = {
             A}, Exp Time: {round(t_exp/60/60, 0)} h)",
