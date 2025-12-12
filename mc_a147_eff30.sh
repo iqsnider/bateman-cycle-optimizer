@@ -1,0 +1,12 @@
+uv run optim mc-search \
+    --t-min 0.1 \
+    --t-max 30 \
+    --t-exp 57600 \
+    --bins 15 \
+    --rate 10.98 \
+    --tp 0.894 \
+    --td 4.06 \
+    --eff1 0.3 --eff2 0.3 \
+    --samples 10 \
+    --a 147 \
+    --save mc_A147_eff30.png

@@ -2,6 +2,7 @@ from optimizer.bateman import simulate_decay, snr, snr_w_time, monte_carlo, simu
 from optimizer.make_plots import tape_cycle_plot, plot_vary_cycle_results
 
 import numpy as np
+import pandas as pd
 import typer
 
 app = typer.Typer()
@@ -93,17 +94,23 @@ def mc_search(t_min: float = 0.5,
               eff2: float = 1.0,
               samples: int = 10,
               A: int = 147,
-              save: str = None):
+              save: str = None,
+              csv_data: str = None):
 
-    lam1 = np.log(2)/tp
-    lam2 = np.log(2)/td
+    if csv_data is not None:
+        df = pd.read_csv(csv_data)
+        plot_vary_cycle_results(
+            df, A, t_exp=t_exp, rate=rate, save=save, csv=True)
+    else:
+        lam1 = np.log(2)/tp
+        lam2 = np.log(2)/td
 
-    mc_res = vary_cycle_time(rate, lam1, lam2, t_min, t_max,
-                             t_exp, eff1, eff2, samples, n_cycles_to_test=bins)
-    for t, pc, dc in zip(mc_res["cycle_times"], mc_res["parent_counts"], mc_res["daughter_counts"]):
-        print(f"t_cycle={t:.2f}  parent_mean={
-              np.mean(pc):.1f}  daughter_mean={np.mean(dc):.1f}")
-    plot_vary_cycle_results(mc_res, A, t_exp=t_exp, save=save)
+        mc_res = vary_cycle_time(rate, lam1, lam2, t_min, t_max,
+                                 t_exp, eff1, eff2, samples, n_t_cycles_to_test=bins)
+        for t, pc, dc in zip(mc_res["cycle_times"], mc_res["parent_counts"], mc_res["daughter_counts"]):
+            print(f"t_cycle={t:.2f}  parent_mean={
+                  np.mean(pc):.1f}  daughter_mean={np.mean(dc):.1f}")
+        plot_vary_cycle_results(mc_res, A, t_exp=t_exp, rate=rate, save=save)
 
 
 if __name__ == '__main__':

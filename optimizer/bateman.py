@@ -36,6 +36,7 @@ def simulate_decay(R, lam1, lam2, t_cycle, t_eval=None):
     return sol
 
 
+# skip
 def snr(sol, lam1, lam2):
     """
     Calculates the Signal-To-Noise ratio between the parent
@@ -51,6 +52,8 @@ def snr(sol, lam1, lam2):
     snr = integral_A2 / integral_A1 if integral_A1 > 0 else 0
 
     return snr, integral_A1, integral_A2
+
+# skip
 
 
 def snr_w_time(sol, lam1, lam2):
@@ -81,6 +84,7 @@ def snr_w_time(sol, lam1, lam2):
     return snr_list, np.array(integral_A1_list), np.array(integral_A2_list)
 
 
+# skip
 def monte_carlo(sol, lam1, lam2, eff1=1.0, eff2=1.0, n_samples=100):
     """
     Monte carlo simulation for event activity
@@ -111,6 +115,10 @@ def monte_carlo(sol, lam1, lam2, eff1=1.0, eff2=1.0, n_samples=100):
 
 
 def simulate_experiment(sol, lam1, lam2, t_cycle, t_exp, eff1=1.0, eff2=1.0, n_samples=100) -> {}:
+    """
+
+    """
+    # number of times the tape cycles during the experiment
     n_cycles = int(t_exp // t_cycle)
 
     results_parent = np.zeros(n_samples)
@@ -146,11 +154,11 @@ def simulate_experiment(sol, lam1, lam2, t_cycle, t_exp, eff1=1.0, eff2=1.0, n_s
     }
 
 
-def vary_cycle_time(R, lam1, lam2, t_min, t_max, t_exp, eff1=1.0, eff2=1.0, n_samples=100, n_cycles_to_test=10):
+def vary_cycle_time(R, lam1, lam2, t_min, t_max, t_exp, eff1=1.0, eff2=1.0, n_samples=100, n_t_cycles_to_test=10):
     """
     Runs the monte carlo simulation with varying cycle times.
     """
-    cycle_times = np.linspace(t_min, t_max, n_cycles_to_test)
+    cycle_times = np.linspace(t_min, t_max, n_t_cycles_to_test)
 
     parent_results = []
     daughter_results = []
