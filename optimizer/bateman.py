@@ -3,6 +3,7 @@ import numpy as np
 from scipy.integrate import solve_ivp
 
 
+# this one
 def bateman_sys(t, y, R, lam1, lam2) -> [float, float]:
     """
     Takes a the beam pps rate and the decay constants
@@ -17,6 +18,7 @@ def bateman_sys(t, y, R, lam1, lam2) -> [float, float]:
     return [dN1dt, dN2dt]
 
 
+# this one
 def simulate_decay(R, lam1, lam2, t_cycle, t_eval=None):
     """
     Simulates the Bateman chain decay system
@@ -114,11 +116,12 @@ def monte_carlo(sol, lam1, lam2, eff1=1.0, eff2=1.0, n_samples=100):
     }
 
 
+# this one
 def simulate_experiment(sol, lam1, lam2, t_cycle, t_exp, eff1=1.0, eff2=1.0, n_samples=100) -> {}:
     """
-
+    Runs a monte carlo simulation of the provided bateman population dynamics
     """
-    # number of times the tape cycles during the experiment
+    # number of full tape cycles during the experiment
     n_cycles = int(t_exp // t_cycle)
 
     results_parent = np.zeros(n_samples)
@@ -127,24 +130,28 @@ def simulate_experiment(sol, lam1, lam2, t_cycle, t_exp, eff1=1.0, eff2=1.0, n_s
     t = sol.t
     N1, N2 = sol.y
 
+    # make vector of time steps
     dt = np.diff(t)
     dt = np.append(dt, dt[-1])
 
+    # compute vector of activities
     A1 = lam1*N1
     A2 = lam2*N2
 
     for i in range(n_samples):
-
         total_parent_detected = []
         total_daughter_detected = []
 
         for _ in range(n_cycles):
+            # outputs array containing counts corresponding to number of counts in the dt (0s and 1s)
             parent_detected = np.random.poisson(eff1*A1*dt)
             daughter_detected = np.random.poisson(eff2*A2*dt)
 
+            # sum array to get total counts in t_cycle
             total_parent_detected.append(parent_detected.sum())
             total_daughter_detected.append(daughter_detected.sum())
 
+        # total counts over the entire experiment
         results_parent[i] = np.sum(total_parent_detected)
         results_daughter[i] = np.sum(total_daughter_detected)
 
@@ -154,6 +161,7 @@ def simulate_experiment(sol, lam1, lam2, t_cycle, t_exp, eff1=1.0, eff2=1.0, n_s
     }
 
 
+# this one
 def vary_cycle_time(R, lam1, lam2, t_min, t_max, t_exp, eff1=1.0, eff2=1.0, n_samples=100, n_t_cycles_to_test=10):
     """
     Runs the monte carlo simulation with varying cycle times.
@@ -175,6 +183,7 @@ def vary_cycle_time(R, lam1, lam2, t_min, t_max, t_exp, eff1=1.0, eff2=1.0, n_sa
             n_samples=n_samples)
         parent_results.append(sim["parent_counts"])
         daughter_results.append(sim["daughter_counts"])
+        print(f"t_cycle = {t_cycle} Done.")
 
     return {
         "cycle_times": cycle_times,

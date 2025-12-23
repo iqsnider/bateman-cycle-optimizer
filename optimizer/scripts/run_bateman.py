@@ -9,8 +9,8 @@ app = typer.Typer()
 
 
 @app.command()
-def tape(time: float = 3,
-         rate: float = 3,
+def tape(time: float = 57600,
+         rate: float = 10.98,
          tp: float = 0.894,
          td: float = 4.06,
          A: int = 147,

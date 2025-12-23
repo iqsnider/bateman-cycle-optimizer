@@ -42,7 +42,7 @@ def tape_cycle_plot(t, R, A, A1, A2, N1, N2, integral_A1, integral_A2, snr_vals,
     plt.tight_layout()
     if save is not None:
         plt.savefig(save, dpi=300, bbox_inches="tight")
-        plt.show()
+    plt.show()
 
 
 def plot_vary_cycle_results(results, A, t_exp, rate, parent=None, daughter=None, save=None, csv=False):
@@ -72,7 +72,7 @@ def plot_vary_cycle_results(results, A, t_exp, rate, parent=None, daughter=None,
         daughter_means = np.array([np.mean(arr) for arr in daughter_counts])
         daughter_stds = np.array([np.std(arr) for arr in daughter_counts])
 
-    snr = parent_means/daughter_means
+    snr = parent_means / daughter_means
 
     fig, ax = plt.subplots(figsize=(10, 6))
     parent_label = "Ba"
@@ -120,8 +120,8 @@ def plot_vary_cycle_results(results, A, t_exp, rate, parent=None, daughter=None,
     ax_snr = ax.twinx()
 
     ax_snr.plot(
-        cycle_times,
-        snr,
+        cycle_times[1:],
+        snr[1:],
         linestyle="--",
         color="magenta",
         marker="^",
