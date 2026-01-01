@@ -1,5 +1,6 @@
 from optimizer.bateman import simulate_decay, snr, snr_w_time, monte_carlo, simulate_experiment, vary_cycle_time
-from optimizer.make_plots import tape_cycle_plot, plot_vary_cycle_results
+from optimizer import bateman_v2
+from optimizer.make_plots import tape_cycle_plot, plot_vary_cycle_results, plot_exp_results
 
 import numpy as np
 import pandas as pd
@@ -111,6 +112,56 @@ def mc_search(t_min: float = 0.5,
             print(f"t_cycle={t:.2f}  parent_mean={
                   np.mean(pc):.1f}  daughter_mean={np.mean(dc):.1f}")
         plot_vary_cycle_results(mc_res, A, t_exp=t_exp, rate=rate, save=save)
+
+
+@app.command()
+def mc_search_v2(t_min: float = 0.5,
+                 t_max: float = 20,
+                 t_cycle: float = 1,
+                 t_exp: float = 57600,
+                 bins: int = 10,
+                 rate: float = 10.98,
+                 tp: float = 0.894,
+                 td: float = 4.06,
+                 A: int = 147,
+                 save: str = None,
+                 csv_data: str = None):
+
+    if csv_data is not None:
+        df = pd.read_csv(csv_data)
+        plot_vary_cycle_results(
+            df, A, t_exp=t_exp, rate=rate, save=save, csv=True)
+    else:
+        lam1 = np.log(2)/tp
+        lam2 = np.log(2)/td
+
+        mc_res = bateman_v2.vary_cycle_time(rate, lam1, lam2, t_min, t_max, t_cycle,
+                                            t_exp, n_cycles_to_test=bins)
+        for t, pc, dc in zip(mc_res["cycle_times"], mc_res["parent_counts"], mc_res["daughter_counts"]):
+            print(f"t_cycle={t:.2f}  parent_mean={
+                  np.mean(pc):.1f}  daughter_mean={np.mean(dc):.1f}")
+        plot_vary_cycle_results(mc_res, A, t_exp=t_exp, rate=rate, save=save)
+
+
+@app.command()
+def mc_v2(t_duty: float = 30,
+          t_cycle: float = 1,
+          t_exp: float = 57600,
+          bins: int = 10,
+          rate: float = 10.98,
+          tp: float = 0.894,
+          td: float = 4.06,
+          A: int = 147,
+          save: str = None,
+          ):
+
+    lam1 = np.log(2)/tp
+    lam2 = np.log(2)/td
+
+    mc_res = bateman_v2.simulate_experiment(
+        R=rate, lam1=lam1, lam2=lam2, t_duty=t_duty, t_cycle=t_cycle, t_exp=t_exp)
+    plot_exp_results(mc_res, t_exp, rate, lam1,
+                     lam2, save=save)
 
 
 if __name__ == '__main__':

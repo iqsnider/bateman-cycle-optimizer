@@ -3,7 +3,50 @@ import seaborn as sns
 import numpy as np
 
 
+def plot_exp_results(results, A, t_exp, rate, lam1, lam2, parent=None, daughter=None, save=None):
+    """
+    Makes a plot of a single experimental run
+    """
+    plt.style.use('seaborn-v0_8-whitegrid')
+
+    fig, ax = plt.subplots(figsize=(10, 6))
+    parent_label = "Ba"
+    daughter_label = "La"
+    if parent is not None:
+        parent_label = parent
+    if daughter is not None:
+        daughter_label = daughter
+
+    from matplotlib.ticker import ScalarFormatter
+
+    formatter = ScalarFormatter(useMathText=True)
+    formatter.set_scientific(True)
+    formatter.set_powerlimits((0, 0))
+
+    ax.yaxis.set_major_formatter(formatter)
+    ax.yaxis.get_offset_text().set_visible(False)
+
+    parent_population = results.y[0]
+    daughter_population = results.y[1]
+    t = results.t
+
+    ax.plot(t, parent_population, 'royalblue', linewidth=2.5,
+            label=rf'$A_p$ ($^{{{A}}}\mathrm{{{parent_label}}}$)')
+    ax.plot(t, daughter_population, 'crimson', linewidth=2.5,
+            label=rf'$A_d$ ($^{{{A}}}\mathrm{{{daughter_label}}}$)')
+    ax.set_xlabel('Time (s)', fontsize=12, fontweight='bold')
+    ax.set_ylabel('Activity (decays/s)', fontsize=12, fontweight='bold')
+
+    plt.tight_layout()
+    if save is not None:
+        plt.savefig(save, dpi=300, bbox_inches="tight")
+    plt.show()
+
+
 def tape_cycle_plot(t, R, A, A1, A2, N1, N2, integral_A1, integral_A2, snr_vals, integrals_A1, integrals_A2, save):
+    """
+
+    """
     # seaborn styling
     A1_minus_A2 = A1 - A2
     max_A1_minus_A2 = max(A1_minus_A2)

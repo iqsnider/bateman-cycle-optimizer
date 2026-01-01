@@ -1,0 +1,11 @@
+uv run optim mc-search-v2 \
+    --t-min 0.5 \
+    --t-max 30 \
+    --t-cycle 1 \
+    --t-exp 57600 \
+    --bins 10 \
+    --rate 10.98 \
+    --tp 0.894 \
+    --td 4.06 \
+    --a 147 \
+    --save mc2_A147.png
